@@ -11,11 +11,14 @@ var (
 	airtableBaseId = os.Getenv("AIRTABLE_BASE_ID")
 )
 
+func healthHandler(w http.ResponseWriter, _ *http.Request) {
+	w.Write([]byte("PONG"))
+}
+
 func main() {
 	if airtableApiKey == "" {
 		panic("AIRTABLE_API_KEY must be specified")
 	}
-
 	if airtableBaseId == "" {
 		panic("AIRTABLE_BASE_ID must be specified")
 	}
@@ -31,12 +34,13 @@ func main() {
 	}
 	log.Println("Default redirect " + defaultRedirect.URL)
 
-	http.HandleFunc("/_ah/health", func(w http.ResponseWriter, _ *http.Request) {
-		w.Write([]byte("PONG"))
-	})
-
+	http.HandleFunc("/_ah/health", healthHandler)
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		http.Redirect(w, r, defaultRedirect.URL, 302)
+		if redirect, err := client.Get(r.URL.Path[1:]); r.URL.Path != "/" && err == nil {
+			http.Redirect(w, r, redirect.URL, 302)
+		} else {
+			http.Redirect(w, r, defaultRedirect.URL, 302)
+		}
 	})
 
 	log.Fatal(http.ListenAndServe(":8080", nil))

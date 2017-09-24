@@ -22,7 +22,7 @@ func NewRedirectClient(apiKey string, baseId string) (*RedirectClient, error) {
 	return &RedirectClient{airtableGo: airtableGo}, err
 }
 
-func (client *RedirectClient) GetRedirect(key string) (*Redirect, error) {
+func (client *RedirectClient) Get(key string) (*Redirect, error) {
 	records := []struct {
 		AirtableID string
 		Fields     Redirect
@@ -38,9 +38,13 @@ func (client *RedirectClient) GetRedirect(key string) (*Redirect, error) {
 		return nil, err
 	}
 
+	if len(records) == 0 {
+		return nil, fmt.Errorf("redirect %s not found", key)
+	}
+
 	return &records[0].Fields, nil
 }
 
 func (client *RedirectClient) GetDefault() (*Redirect, error) {
-	return client.GetRedirect(defaultRedirectKey)
+	return client.Get(defaultRedirectKey)
 }
