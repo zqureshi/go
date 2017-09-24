@@ -55,6 +55,10 @@ func main() {
 	defaultRedirect := records[0].Fields
 	log.Println("Default redirect " + defaultRedirect.URL)
 
+	http.HandleFunc("/_ah/health", func(w http.ResponseWriter, _ *http.Request) {
+		w.Write([]byte("PONG"))
+	})
+
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, defaultRedirect.URL, 302)
 	})
