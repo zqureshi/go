@@ -23,7 +23,7 @@ func main() {
 		panic("AIRTABLE_BASE_ID must be specified")
 	}
 
-	client, err := NewRedirectClient(airtableApiKey, airtableBaseId)
+	client, err := NewCachingRedirectClient(airtableApiKey, airtableBaseId)
 	if err != nil {
 		panic(err)
 	}
