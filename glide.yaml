@@ -1,0 +1,4 @@
+package: github.com/zqureshi/go
+import:
+- package: github.com/fabioberger/airtable-go
+  version: v3.1.0
