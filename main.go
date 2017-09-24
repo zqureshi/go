@@ -20,7 +20,7 @@ type Redirect struct {
 
 type Record struct {
 	AirtableID string
-	Fields Redirect
+	Fields     Redirect
 }
 
 func main() {
