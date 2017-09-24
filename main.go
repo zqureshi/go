@@ -39,6 +39,7 @@ func main() {
 		if redirect, err := client.Get(r.URL.Path[1:]); r.URL.Path != "/" && err == nil {
 			http.Redirect(w, r, redirect.URL, 302)
 		} else {
+			defaultRedirect, err = client.GetDefault()
 			http.Redirect(w, r, defaultRedirect.URL, 302)
 		}
 	})
