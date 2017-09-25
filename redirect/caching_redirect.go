@@ -1,8 +1,9 @@
 package redirect
 
 import (
-	"github.com/coocood/freecache"
 	"log"
+
+	"github.com/coocood/freecache"
 )
 
 const cacheExpiration = 86400 * 7 // 7 days

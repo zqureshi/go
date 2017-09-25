@@ -2,6 +2,7 @@ package redirect
 
 import (
 	"fmt"
+
 	"github.com/fabioberger/airtable-go"
 )
 
