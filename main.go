@@ -4,6 +4,8 @@ import (
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/zqureshi/go/redirect"
 )
 
 var (
@@ -23,7 +25,7 @@ func main() {
 		panic("AIRTABLE_BASE_ID must be specified")
 	}
 
-	client, err := NewCachingRedirectClient(airtableApiKey, airtableBaseId)
+	client, err := redirect.NewCaching(airtableApiKey, airtableBaseId)
 	if err != nil {
 		panic(err)
 	}

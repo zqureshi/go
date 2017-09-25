@@ -1,4 +1,4 @@
-package main
+package redirect
 
 import (
 	"fmt"
@@ -8,7 +8,7 @@ import (
 const redirectTableName = "Redirects"
 const defaultRedirectKey = "default"
 
-type RedirectClient struct {
+type Client struct {
 	airtableGo *airtable.Client
 }
 
@@ -17,12 +17,12 @@ type Redirect struct {
 	URL string
 }
 
-func NewRedirectClient(apiKey string, baseId string) (*RedirectClient, error) {
+func New(apiKey string, baseId string) (*Client, error) {
 	airtableGo, err := airtable.New(apiKey, baseId)
-	return &RedirectClient{airtableGo: airtableGo}, err
+	return &Client{airtableGo: airtableGo}, err
 }
 
-func (client *RedirectClient) Get(key string) (*Redirect, error) {
+func (client *Client) Get(key string) (*Redirect, error) {
 	records := []struct {
 		AirtableID string
 		Fields     Redirect
@@ -45,6 +45,6 @@ func (client *RedirectClient) Get(key string) (*Redirect, error) {
 	return &records[0].Fields, nil
 }
 
-func (client *RedirectClient) GetDefault() (*Redirect, error) {
+func (client *Client) GetDefault() (*Redirect, error) {
 	return client.Get(defaultRedirectKey)
 }
