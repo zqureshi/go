@@ -1,6 +1,7 @@
 package main
 
 import (
+	"io"
 	"log"
 	"net/http"
 	"os"
@@ -14,7 +15,7 @@ var (
 )
 
 func healthHandler(w http.ResponseWriter, _ *http.Request) {
-	w.Write([]byte("PONG"))
+	io.WriteString(w, "PONG")
 }
 
 func main() {
