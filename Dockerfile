@@ -1,4 +1,4 @@
-FROM golang:1.9.2 AS builder
+FROM golang:alpine AS builder
 ADD . /go/src/github.com/zqureshi/go
 WORKDIR /go/src/github.com/zqureshi/go
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -o /app/go .
