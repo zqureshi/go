@@ -25,10 +25,6 @@ var (
 	airtableBaseID string
 )
 
-func healthHandler(w http.ResponseWriter, _ *http.Request) {
-	io.WriteString(w, "PONG")
-}
-
 func init() {
 	flag.StringVar(&listenAddr, "listen", ":80", "[host]:port on which to bind server")
 	flag.Parse()
@@ -44,6 +40,12 @@ func init() {
 	}
 
 	rootLog.SetLogger(logger)
+}
+
+func init() {
+	http.HandleFunc("/_ah/health", func(w http.ResponseWriter, _ *http.Request) {
+		io.WriteString(w, "PONG")
+	})
 }
 
 func main() {
@@ -63,7 +65,6 @@ func main() {
 	}
 	logger.Info("Default redirect " + defaultRedirect.URL)
 
-	http.HandleFunc("/_ah/health", healthHandler)
 	http.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
 		if r, err := client.Get(req.URL.Path[1:]); req.URL.Path != "/" && err == nil {
 			http.Redirect(w, req, r.URL, 302)
