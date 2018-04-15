@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"io"
 	"log"
 	"net/http"
@@ -10,6 +11,7 @@ import (
 )
 
 var (
+	listenAddr     string
 	airtableAPIKey string
 	airtableBaseID string
 )
@@ -19,6 +21,9 @@ func healthHandler(w http.ResponseWriter, _ *http.Request) {
 }
 
 func init() {
+	flag.StringVar(&listenAddr, "listen", ":80", "[host]:port on which to bind server")
+	flag.Parse()
+
 	airtableAPIKey = os.Getenv("AIRTABLE_API_KEY")
 	if airtableAPIKey == "" {
 		panic("AIRTABLE_API_KEY must be specified")
@@ -57,5 +62,5 @@ func main() {
 		}
 	})
 
-	log.Fatal(http.ListenAndServe(":80", nil))
+	log.Fatal(http.ListenAndServe(listenAddr, nil))
 }
