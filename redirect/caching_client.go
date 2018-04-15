@@ -9,10 +9,6 @@ import (
 
 const cacheExpiration = 7 * 24 * time.Hour
 
-var (
-	logger = log.Logger
-)
-
 // CachingClient uses an in-memory cache in front of a Redirector to minimize reads.
 type CachingClient struct {
 	redirector Redirector
@@ -36,7 +32,7 @@ func (c *CachingClient) Get(key string) (*Redirect, error) {
 		return redirect, err
 	}
 
-	logger.Info("Caching", key, "->", redirect.URL)
+	log.Logger.Infof("Caching %s -> %s", key, redirect.URL)
 	err = c.cache.Set([]byte(key), []byte(redirect.URL), int(cacheExpiration.Seconds()))
 
 	return redirect, err
