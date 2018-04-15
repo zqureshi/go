@@ -10,8 +10,8 @@ import (
 )
 
 var (
-	airtableApiKey = os.Getenv("AIRTABLE_API_KEY")
-	airtableBaseId = os.Getenv("AIRTABLE_BASE_ID")
+	airtableAPIKey = os.Getenv("AIRTABLE_API_KEY")
+	airtableBaseII = os.Getenv("AIRTABLE_BASE_ID")
 )
 
 func healthHandler(w http.ResponseWriter, _ *http.Request) {
@@ -19,31 +19,36 @@ func healthHandler(w http.ResponseWriter, _ *http.Request) {
 }
 
 func main() {
-	if airtableApiKey == "" {
+	if airtableAPIKey == "" {
 		panic("AIRTABLE_API_KEY must be specified")
 	}
-	if airtableBaseId == "" {
+	if airtableBaseII == "" {
 		panic("AIRTABLE_BASE_ID must be specified")
 	}
 
-	client, err := redirect.NewCaching(airtableApiKey, airtableBaseId)
+	c, err := redirect.NewClient(airtableAPIKey, airtableBaseII)
 	if err != nil {
 		panic(err)
 	}
 
-	defaultRedirect, err := client.GetDefault()
+	client, err := redirect.NewCachingClient(c)
+	if err != nil {
+		panic(err)
+	}
+
+	defaultRedirect, err := client.Get(redirect.DefaultRedirectKey)
 	if err != nil {
 		panic("A 'default' redirect must be specified")
 	}
 	log.Println("Default redirect " + defaultRedirect.URL)
 
 	http.HandleFunc("/_ah/health", healthHandler)
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		if redirect, err := client.Get(r.URL.Path[1:]); r.URL.Path != "/" && err == nil {
-			http.Redirect(w, r, redirect.URL, 302)
+	http.HandleFunc("/", func(w http.ResponseWriter, req *http.Request) {
+		if r, err := client.Get(req.URL.Path[1:]); req.URL.Path != "/" && err == nil {
+			http.Redirect(w, req, r.URL, 302)
 		} else {
-			defaultRedirect, err = client.GetDefault()
-			http.Redirect(w, r, defaultRedirect.URL, 302)
+			d, _ := client.Get(redirect.DefaultRedirectKey)
+			http.Redirect(w, req, d.URL, 302)
 		}
 	})
 
