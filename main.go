@@ -10,23 +10,28 @@ import (
 )
 
 var (
-	airtableAPIKey = os.Getenv("AIRTABLE_API_KEY")
-	airtableBaseII = os.Getenv("AIRTABLE_BASE_ID")
+	airtableAPIKey string
+	airtableBaseID string
 )
 
 func healthHandler(w http.ResponseWriter, _ *http.Request) {
 	io.WriteString(w, "PONG")
 }
 
-func main() {
+func init() {
+	airtableAPIKey = os.Getenv("AIRTABLE_API_KEY")
 	if airtableAPIKey == "" {
 		panic("AIRTABLE_API_KEY must be specified")
 	}
-	if airtableBaseII == "" {
+
+	airtableBaseID = os.Getenv("AIRTABLE_BASE_ID")
+	if airtableBaseID == "" {
 		panic("AIRTABLE_BASE_ID must be specified")
 	}
+}
 
-	c, err := redirect.NewClient(airtableAPIKey, airtableBaseII)
+func main() {
+	c, err := redirect.NewClient(airtableAPIKey, airtableBaseID)
 	if err != nil {
 		panic(err)
 	}
