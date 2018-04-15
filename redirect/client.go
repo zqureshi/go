@@ -35,7 +35,7 @@ func (c *Client) Get(key string) (*Redirect, error) {
 	err := c.airtableGo.ListRecords(
 		redirectTableName,
 		&records,
-		airtable.ListParameters{FilterByFormula: fmt.Sprintf("{Key} = '%s'", key), MaxRecords: 1},
+		airtable.ListParameters{FilterByFormula: fmt.Sprintf("{Key} = %q", key), MaxRecords: 1},
 	)
 
 	if err != nil {
@@ -43,7 +43,7 @@ func (c *Client) Get(key string) (*Redirect, error) {
 	}
 
 	if len(records) == 0 {
-		return nil, fmt.Errorf("redirect %s not found", key)
+		return nil, fmt.Errorf("redirect %q not found", key)
 	}
 
 	return &records[0].Fields, nil
