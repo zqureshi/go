@@ -15,7 +15,7 @@ import (
 var (
 	logger = &log.Logger{
 		Out:       os.Stdout,
-		Formatter: new(log.JSONFormatter),
+		Formatter: new(log.TextFormatter),
 		Hooks:     make(log.LevelHooks),
 		Level:     log.InfoLevel,
 	}
