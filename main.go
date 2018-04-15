@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 
+	rootLog "github.com/zqureshi/go/log"
 	"github.com/zqureshi/go/redirect"
 )
 
@@ -41,6 +42,8 @@ func init() {
 	if airtableBaseID == "" {
 		logger.Fatal("AIRTABLE_BASE_ID must be specified")
 	}
+
+	rootLog.SetLogger(logger)
 }
 
 func main() {
